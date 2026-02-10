@@ -101,7 +101,10 @@ watch(
 
         for (let i = nonSpaceChars.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1))
-          ;[nonSpaceChars[i], nonSpaceChars[j]] = [nonSpaceChars[j], nonSpaceChars[i]]
+
+          const temp = nonSpaceChars[i]!
+          nonSpaceChars[i] = nonSpaceChars[j]!
+          nonSpaceChars[j] = temp
         }
 
         let charIndex = 0
