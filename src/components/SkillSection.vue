@@ -66,6 +66,12 @@
         <i class="devicon-docker-plain colored text-xl"></i>
         Docker
       </div>
+      <div
+        class="badge badge-ghost badge-md hover:cursor-pointer md:badge-lg hover:border-gray-300 transition-all"
+      >
+        <i class="devicon-git-plain colored text-xl"></i>
+        Git
+      </div>
     </div>
   </div>
 </template>
