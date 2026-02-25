@@ -2,7 +2,8 @@ import type { IHomeCard } from '@/types'
 
 export const cards: IHomeCard[] = [
   {
-    img: 'trendigo.jpg',
+    id: 1,
+    img: ['trendigo.jpg', 'trendigo2.png', 'trendigo3.png', 'trendigo4.png', 'trendigo5.png'],
     title: 'Trendigo',
     body: 'E-commerce website project, integrated with Midtrans(Payment), Raja Ongkir(Shiping cost calculation), and WhatsApp messaging',
     stacks: ['Vue.js', 'Laravel', 'Inertia', 'MySQL'],
@@ -10,7 +11,8 @@ export const cards: IHomeCard[] = [
     link: 'https://github.com/Ferdinand05/trendigo',
   },
   {
-    img: 'hrms.jpg',
+    id: 2,
+    img: ['hrms.jpg', 'hrms2.png', 'hrms3.png', 'hrms4.png'],
     title: 'Human Resource Management System',
     body: 'HRMS project, with an in/out attendance system with GPS tracking, selfie capture. Manage employees, salaries, payroll, and leave.',
     stacks: ['Vue.js', 'Laravel REST API', 'MySQL'],
@@ -18,7 +20,8 @@ export const cards: IHomeCard[] = [
     link: 'https://github.com/Ferdinand05/frontend-hrms',
   },
   {
-    img: 'medlife.png',
+    id: 3,
+    img: ['medlife.png'],
     title: 'Medlife',
     body: 'Expire medication reminder app. Provides notifications when medication is about to expire. Email and WhatsApp reminders.',
     stacks: ['Vue.js', 'Express.js', 'MongoDB'],
@@ -26,7 +29,8 @@ export const cards: IHomeCard[] = [
     link: 'https://github.com/Ferdinand05/frontend-medlife',
   },
   {
-    img: 'sportrent.png',
+    id: 4,
+    img: ['sportrent.jpeg'],
     title: 'SportRent',
     body: 'sports equipment rental system, fully using Laravel. With rental features, schedule checking, rental receipt printing. Equipped with an admin dashboard.',
     stacks: ['Laravel', 'Bootstrap', 'MySQL'],
@@ -34,10 +38,26 @@ export const cards: IHomeCard[] = [
     link: 'https://github.com/Ferdinand05/penyewaan-lapangan-futsal',
   },
   {
-    img: 'nilosaproduction.png',
+    id: 5,
+    img: ['nilosaproduction.png', 'nilosaproduction2.png', 'nilosaproduction3.png'],
     title: 'Simple Productions Tracking',
     body: 'production checking system, where customers can check and print production details using their customer code.',
     stacks: ['Laravel', 'Filament', 'MySQL'],
+    category: 'Dashboards',
+    link: 'https://github.com/Ferdinand05/productions_tracking',
+  },
+  {
+    id: 6,
+    img: [
+      'jatahqurban2.png',
+      'jatahqurban.png',
+      'jatahqurban3.png',
+      'jatahqurban4.png',
+      'jatahqurban5.png',
+    ],
+    title: 'Jatah Qurban',
+    body: 'A dashboard system for managing the distribution of sacrificial meat via QR codes that can be sent via email.',
+    stacks: ['Laravel', 'Filament', 'MySQL', 'Livewire'],
     category: 'Dashboards',
     link: 'https://github.com/Ferdinand05/productions_tracking',
   },

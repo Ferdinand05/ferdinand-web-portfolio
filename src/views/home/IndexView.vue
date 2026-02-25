@@ -106,7 +106,7 @@ function filterProjects(event: Event) {
 
           <!-- Subheadline -->
           <div class="my-8">
-            <span class=" md:text-lg text-gray-600 max-w-2xl font-light">
+            <span class="md:text-lg text-gray-600 max-w-2xl font-light">
               Jakarta-based Fullstack Web Developer building practical digital solutions for
               <span class="text-rotate">
                 <span class="font-normal">
@@ -227,6 +227,7 @@ function filterProjects(event: Event) {
             <!-- card -->
             <HomeCard
               v-for="(card, i) in selectedProjects"
+              :id="card.id"
               :key="i"
               :category="card.category ?? ''"
               :img="card.img"
