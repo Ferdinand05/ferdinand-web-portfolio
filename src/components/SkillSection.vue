@@ -58,7 +58,7 @@
       <div
         class="badge badge-ghost badge-md hover:cursor-pointer md:badge-lg hover:border-gray-300 transition-all"
       >
-        <i class="devicon-mongodb-plain colored text-xl"></i> MongoDB
+        <i class="devicon-postgresql-plain colored text-xl"></i> PostgreSQL
       </div>
       <div
         class="badge badge-ghost badge-md hover:cursor-pointer md:badge-lg hover:border-gray-300 transition-all"
@@ -71,6 +71,12 @@
       >
         <i class="devicon-git-plain colored text-xl"></i>
         Git
+      </div>
+      <div
+        class="badge badge-ghost badge-md hover:cursor-pointer md:badge-lg hover:border-gray-300 transition-all"
+      >
+        <i class="devicon-go-original-wordmark colored text-xl"></i>
+        Go
       </div>
     </div>
   </div>
