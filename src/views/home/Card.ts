@@ -64,7 +64,7 @@ export const cards: IHomeCard[] = [
   {
     id: 7,
     img: ['hellopompi1.png', 'hellopompi2.png', 'hellopompi3.png'],
-    title: 'Hellopompi - ',
+    title: 'Hellopompi',
     body: 'A real-world project: an online store selling a variety of decorations for events.',
     stacks: ['Laravel', 'Filament', 'MySQL', 'Livewire'],
     category: 'Web Apps',
