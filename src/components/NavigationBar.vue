@@ -1,5 +1,11 @@
+<script setup lang="ts">
+import { useWindowScroll } from '@vueuse/core'
+
+const { y } = useWindowScroll()
+</script>
+
 <template>
-  <div class="navbar bg-transparent">
+  <div class="navbar site-navbar" :class="{ 'is-scrolled': y > 12 }">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -41,3 +47,24 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.site-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: transparent;
+  transition: background-color 180ms ease, backdrop-filter 180ms ease;
+}
+
+.site-navbar.is-scrolled {
+  background-color: rgb(255 255 255 / 82%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgb(17 24 39 / 8%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-navbar { transition: none; }
+}
+</style>
