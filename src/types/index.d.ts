@@ -4,6 +4,6 @@ export interface IHomeCard {
   body: string
   stacks: [string, string, ...string[]]
   img: [string, ...string[]]
-  category?: string
+  category?: 'Web Apps' | 'Dashboards' | 'Landing Pages'
   link?: string
 }

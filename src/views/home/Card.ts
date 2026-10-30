@@ -70,4 +70,22 @@ export const cards: IHomeCard[] = [
     category: 'Web Apps',
     link: 'hellopompi.site',
   },
+  {
+    id: 8,
+    img: [
+      '/breadncircus/image1.png',
+      '/breadncircus/image2.png',
+      '/breadncircus/image3.png',
+      '/breadncircus/image4.png',
+      '/breadncircus/image5.png',
+      '/breadncircus/image6.png',
+      '/breadncircus/image7.png',
+      '/breadncircus/image8.png',
+    ],
+    title: 'Bread & Circus',
+    body: 'an online fashion ecommerce with customer account and order tools, plus an admin area for managing the shop. This repository contains the Vue frontend. It connects to a separate Go backend for authentication, product data, cart, checkout, payments, and order operations.',
+    stacks: ['Vue.js', 'Shadcn', 'Tanstack Query/Table', 'Pinia', 'Go/Gin as Backend'],
+    category: 'Web Apps',
+    link: 'https://github.com/Ferdinand05/frontend_ecommerce',
+  },
 ]
