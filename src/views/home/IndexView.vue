@@ -8,7 +8,7 @@ import SkillSection from '@/components/SkillSection.vue'
 import type { IHomeCard } from '@/types'
 import { fire, shoot } from '@/utils/confetti'
 import { useWindowScroll } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { cards } from './Card'
 
 const { y } = useWindowScroll()
@@ -51,25 +51,50 @@ watch(y, (val) => {
 })
 
 const selectedProjects = ref<IHomeCard[]>(cards)
-function filterProjects(event: Event) {
-  const target = event.currentTarget as HTMLElement | null
+const activeProjectFilter = ref('All')
+type ContributionDay = { date: string; count: number; level: number }
+const contributionTotal = ref<number | null>(null)
+const contributionDays = ref<ContributionDay[]>([])
+const contributionError = ref(false)
+const contributionLoading = ref(true)
+const contributionTooltip = ref('')
 
-  if (target?.textContent.trim() == 'All') {
-    selectedProjects.value = cards
-  } else {
-    selectedProjects.value = cards.filter((value) => value.category == target?.textContent.trim())
+onMounted(async () => {
+  try {
+    const response = await fetch('https://github-contributions-api.jogruber.de/v4/Ferdinand05?y=last')
+    if (!response.ok) throw new Error('GitHub contributions request failed')
+    const data: { total?: { lastYear?: number }; contributions?: ContributionDay[] } = await response.json()
+    if (typeof data.total?.lastYear !== 'number' || !Array.isArray(data.contributions)) {
+      throw new Error('Contribution data missing')
+    }
+    contributionTotal.value = data.total.lastYear
+    contributionDays.value = data.contributions
+  } catch {
+    contributionError.value = true
+  } finally {
+    contributionLoading.value = false
   }
+})
 
-  console.log(selectedProjects.value)
+function filterProjects(category: string) {
+  activeProjectFilter.value = category
+  selectedProjects.value = category === 'All' ? cards : cards.filter((project) => project.category === category)
+}
+
+function formatContributionDate(date: string) {
+  return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${date}T00:00:00Z`))
+}
+
+function showContribution(day: ContributionDay) {
+  contributionTooltip.value = `${formatContributionDate(day.date)} · ${day.count} ${day.count === 1 ? 'contribution' : 'contributions'}`
 }
 </script>
 
 <template>
   <div ref="el" />
   <main class="">
+    <NavigationBar />
     <section style="background-image: url('img/bg2.png')" id="home">
-      <NavigationBar />
-
       <!-- HERO -->
       <section class="min-h-screen flex items-center">
         <div class="max-w-6xl mx-auto px-6 w-full text-center md:text-left">
@@ -178,44 +203,28 @@ function filterProjects(event: Event) {
       :threshold="0.2"
       :delay="0"
     >
-      <!-- PROJECTS -->
+        <!-- PROJECTS -->
 
       <section id="projects" class="pb-20 bg-base-200 pt-20">
         <div class="max-w-6xl mx-auto px-6 w-full text-left">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4 font-sans text-center md:text-left">
-            Selected
-
-            <span class="font-playfair italic text-indigo-600"> Solutions </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-2 font-sans text-center md:text-left">
+            Selected <span class="font-playfair italic text-indigo-600">Solutions</span>
           </h2>
+          <p class="section-description mb-8 text-center md:text-left">
+            A selection of web apps, landing pages, and dashboards I have built.
+          </p>
 
-          <div class="flex flex-wrap gap-3 mb-10 justify-center md:justify-normal">
+          <div class="project-filters mb-10" role="group" aria-label="Filter projects by category">
             <button
+              v-for="category in ['All', 'Web Apps', 'Landing Pages', 'Dashboards']"
+              :key="category"
               type="button"
-              @click="filterProjects($event)"
-              class="badge badge-soft badge-neutral btn font-normal text-gray-700 hover:border-gray-400"
+              class="project-filter"
+              :class="{ 'is-active': activeProjectFilter === category }"
+              :aria-pressed="activeProjectFilter === category"
+              @click="filterProjects(category)"
             >
-              All
-            </button>
-            <button
-              type="button"
-              @click="filterProjects($event)"
-              class="badge badge-soft badge-host btn font-normal text-gray-700 hover:border-gray-400"
-            >
-              Web Apps
-            </button>
-            <button
-              type="button"
-              @click="filterProjects($event)"
-              class="badge badge-soft badge-host btn font-normal text-gray-700 hover:border-gray-400"
-            >
-              Landing Pages
-            </button>
-            <button
-              type="button"
-              @click="filterProjects($event)"
-              class="badge badge-soft badge-host btn font-normal text-gray-700 hover:border-gray-400"
-            >
-              Dashboards
+              {{ category }}
             </button>
           </div>
 
@@ -226,9 +235,9 @@ function filterProjects(event: Event) {
           >
             <!-- card -->
             <HomeCard
-              v-for="(card, i) in selectedProjects"
+              v-for="card in selectedProjects"
               :id="card.id"
-              :key="i"
+              :key="card.id"
               :category="card.category ?? ''"
               :img="card.img"
               :title="card.title"
@@ -261,6 +270,92 @@ function filterProjects(event: Event) {
       <section class="py-20" id="skills">
         <SkillSection />
         <!-- cta -->
+      </section>
+    </AnimatedContent>
+
+    <AnimatedContent
+      :distance="70"
+      direction="vertical"
+      :reverse="false"
+      :duration="1"
+      ease="power3.out"
+      :initial-opacity="0"
+      :animate-opacity="true"
+      :scale="1"
+      :threshold="0.15"
+      :delay="0"
+    >
+      <section id="activity" class="activity-section py-20">
+        <div class="activity-container mx-auto px-6">
+          <div class="activity-heading">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Code in <span>motion</span>
+            </h2>
+            <p class="section-description">Recent coding time and contributions from GitHub and WakaTime.</p>
+          </div>
+          <div class="activity-stack">
+            <article class="activity-panel github-panel">
+              <div class="activity-panel-heading">
+                <div>
+                  <p class="activity-label">GITHUB</p>
+                  <h3>12 months of contributions</h3>
+                  <p v-if="contributionTotal !== null" class="contribution-total" aria-live="polite">
+                    <strong>{{ contributionTotal.toLocaleString() }}</strong>
+                    <span>contributions</span>
+                  </p>
+                  <p v-else-if="contributionLoading" class="contribution-total" role="status">Loading total…</p>
+                  <p v-else-if="contributionError" class="contribution-total contribution-error" role="status">
+                    Total unavailable. View the profile for current activity.
+                  </p>
+                </div>
+                <a href="https://github.com/Ferdinand05" target="_blank" rel="noopener noreferrer" aria-label="View Ferdinand05 on GitHub">Ferdinand05 ↗</a>
+              </div>
+              <div v-if="contributionDays.length" class="contribution-calendar" aria-label="Daily GitHub contributions over the past year">
+                <div class="contribution-grid">
+                  <button
+                    v-for="day in contributionDays"
+                    :key="day.date"
+                    type="button"
+                    class="contribution-day"
+                    :class="`level-${Math.min(4, Math.max(0, day.level))}`"
+                    :aria-label="`${formatContributionDate(day.date)}: ${day.count} ${day.count === 1 ? 'contribution' : 'contributions'}`"
+                    :title="formatContributionDate(day.date)"
+                  />
+                </div>
+              </div>
+              <p v-else-if="contributionLoading" class="activity-caption" role="status">Loading contribution calendar…</p>
+              <p v-else class="activity-caption" role="status">Contribution calendar unavailable. Visit the GitHub profile to see activity.</p>
+              <p class="activity-caption">Daily contributions over the past year</p>
+            </article>
+            <article class="activity-panel wakatime-panel">
+              <div class="activity-panel-heading">
+                <div>
+                  <p class="activity-label">WAKATIME</p>
+                  <h3>Time spent building</h3>
+                </div>
+                <a href="https://wakatime.com/@55805ae7-b2dd-4c18-ab75-0d56ccfe4c6e" target="_blank" rel="noopener noreferrer">WakaTime ↗</a>
+              </div>
+              <div class="wakatime-charts">
+                <figure class="wakatime-embed">
+                  <iframe
+                    src="https://wakatime.com/share/@55805ae7-b2dd-4c18-ab75-0d56ccfe4c6e/16cfd89a-59ef-4ed5-a2ea-189b239b39d3.svg"
+                    title="WakaTime coding activity"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                </figure>
+                <figure class="wakatime-embed language-stats-embed">
+                  <iframe
+                    src="https://wakatime.com/share/@55805ae7-b2dd-4c18-ab75-0d56ccfe4c6e/cc6297f4-de88-4acd-bace-575c6581c0f2.svg"
+                    title="WakaTime language statistics"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                </figure>
+              </div>
+            </article>
+          </div>
+        </div>
       </section>
     </AnimatedContent>
     <section>
